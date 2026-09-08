@@ -1,0 +1,2537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажёр ОГЭ — Устная часть</title>
+    <link rel="stylesheet" href="https://cdn.fontsource.org/css?family=inter@400,500,600,700">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --bg-elevated: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #475569;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        
+        .header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a5b4fc, #818cf8, #c4b5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            margin-bottom: 8px;
+        }
+        
+        .header p { color: var(--text-muted); font-size: 1.05rem; position: relative; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-tab {
+            padding: 12px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-tab:hover { border-color: var(--primary); color: var(--text); transform: translateY(-2px); }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+        }
+        
+        .nav-tab .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .card:hover { border-color: rgba(99,102,241,0.3); }
+        
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title .icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+        }
+        
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 30px rgba(99,102,241,0.15);
+        }
+        
+        .task-card:hover::before { opacity: 1; }
+        
+        .task-card .task-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            opacity: 0.5;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        
+        .task-card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
+        .task-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; }
+        
+        .task-card .meta { display: flex; gap: 15px; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap; }
+        .task-card .meta span { display: flex; align-items: center; gap: 4px; }
+        
+        .timer-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--text);
+            background: var(--bg-elevated);
+            padding: 10px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            min-width: 160px;
+            text-align: center;
+        }
+        
+        .timer.warning { color: var(--warning); border-color: var(--warning); }
+        .timer.danger { color: var(--danger); border-color: var(--danger); animation: blink 1s infinite; }
+        
+        @keyframes blink { 50% { opacity: 0.5; } }
+        
+        .timer-label { font-size: 0.85rem; color: var(--text-muted); text-align: center; }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+        }
+        
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99,102,241,0.4); }
+        
+        .btn-success { background: linear-gradient(135deg, var(--success), #059669); color: white; }
+        .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        
+        .btn-outline:hover { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+        
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        
+        .btn-record {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+        
+        .btn-record.recording {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            animation: recordPulse 1.5s infinite;
+        }
+        
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(239,68,68,0); }
+        }
+        
+        .reading-text {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 20px 0;
+            color: var(--text);
+        }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 8px; color: var(--text); font-size: 0.95rem; }
+        
+        .form-group textarea, .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            resize: vertical;
+        }
+        
+        .form-group textarea:focus, .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+        
+        .form-group textarea { min-height: 100px; }
+        
+        .plan-list { list-style: none; margin: 15px 0; }
+        
+        .plan-list li {
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        
+        .plan-list li .num {
+            width: 28px; height: 28px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .plan-list li.current {
+            border-color: var(--warning);
+            background: rgba(245,158,11,0.08);
+            box-shadow: 0 0 0 2px rgba(245,158,11,0.2);
+        }
+        
+        .plan-list li.done {
+            border-color: var(--success);
+            background: rgba(16,185,129,0.05);
+        }
+        
+        .plan-list li.done .num { background: var(--success); }
+        
+        .transcript {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 100px;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .transcript:empty::before {
+            content: 'Здесь появится распознанный текст...';
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-item .value { font-size: 1.8rem; font-weight: 700; color: var(--primary-light); }
+        .stat-item .label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        
+        .tips-box {
+            background: rgba(99,102,241,0.05);
+            border: 1px solid rgba(99,102,241,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .tips-box h4 { color: var(--primary-light); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .tips-box ul { list-style: none; padding: 0; }
+        
+        .tips-box ul li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .tips-box ul li::before { content: '✓'; position: absolute; left: 0; color: var(--success); font-weight: 700; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-elevated);
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+        
+        .variant-selector { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        
+        .variant-btn {
+            padding: 8px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+        
+        .variant-btn:hover, .variant-btn.active {
+            border-color: var(--primary);
+            color: var(--text);
+            background: rgba(99,102,241,0.1);
+        }
+        
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        .word-counter { text-align: right; font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; }
+        .word-counter.good { color: var(--success); }
+        .word-counter.warning { color: var(--warning); }
+        
+        .email-template {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        
+        .model-answer-toggle { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        
+        .model-answer {
+            margin-top: 15px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02));
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            animation: slideDown 0.4s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .model-answer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .model-answer-header h4 { color: var(--success); display: flex; align-items: center; gap: 8px; font-size: 1.05rem; }
+        
+        .model-answer-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+        
+        .meta-badge {
+            background: rgba(16,185,129,0.15);
+            color: var(--success);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .model-answer-text {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text);
+            white-space: pre-wrap;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .model-answer-text.email-style { font-family: monospace; }
+        
+        .useful-phrases {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(99,102,241,0.05);
+            border-left: 3px solid var(--primary);
+            border-radius: 8px;
+        }
+        
+        .useful-phrases h5 { color: var(--primary-light); margin-bottom: 8px; font-size: 0.9rem; }
+        
+        .useful-phrases ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 6px;
+        }
+        
+        .useful-phrases ul li {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding: 4px 0 4px 18px;
+            position: relative;
+        }
+        
+        .useful-phrases ul li::before { content: '→'; position: absolute; left: 0; color: var(--primary-light); }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(71,85,105,0.3);
+        }
+        
+        .checklist-item:last-child { border-bottom: none; }
+        
+        .checklist-item input[type="checkbox"] {
+            width: 20px; height: 20px;
+            accent-color: var(--primary);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        /* ============ DIALOG SPECIFIC ============ */
+        .dialog-situation {
+            background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(99,102,241,0.02));
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text);
+        }
+        
+        .dialog-situation strong { color: var(--primary-light); }
+        
+        .question-progress {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .question-dot {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+        
+        .question-dot.active {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: white;
+            animation: recordPulse 1.5s infinite;
+            box-shadow: 0 0 0 0 rgba(245,158,11,0.4);
+        }
+        
+        .question-dot.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        
+        .current-question-box {
+            background: var(--bg-elevated);
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .current-question-box .q-num {
+            font-size: 0.85rem;
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .current-question-box .q-text {
+            font-size: 1.15rem;
+            color: var(--text);
+            font-weight: 500;
+            font-style: italic;
+        }
+        
+        .recorded-question {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .recorded-question .q-num-small {
+            width: 24px; height: 24px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .recorded-question .q-content { flex: 1; }
+        
+        .recorded-question .q-prompt {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-style: italic;
+        }
+        
+        .recorded-question .q-answer {
+            font-size: 0.95rem;
+            color: var(--text);
+        }
+        
+        /* ============ MODAL ============ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideDown 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-icon {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 15px;
+        }
+        
+        .modal-icon.success { background: rgba(16,185,129,0.15); }
+        .modal-icon.warning { background: rgba(245,158,11,0.15); }
+        .modal-icon.danger { background: rgba(239,68,68,0.15); }
+        .modal-icon.info { background: rgba(99,102,241,0.15); }
+        
+        .modal h3 { text-align: center; margin-bottom: 10px; font-size: 1.3rem; }
+        .modal p { text-align: center; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; }
+        
+        .modal-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-stat {
+            background: var(--bg-elevated);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .modal-stat .value { font-size: 1.4rem; font-weight: 700; color: var(--primary-light); }
+        .modal-stat .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        
+        .modal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.6rem; }
+            .task-grid { grid-template-columns: 1fr; }
+            .timer { font-size: 2rem; min-width: 130px; }
+            .card { padding: 20px; }
+            .nav-tab { padding: 10px 14px; font-size: 0.8rem; }
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        
+        .fade-in { animation: fadeIn 0.4s ease; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hidden { display: none !important; }
+        
+        .fipi-note {
+            background: rgba(245,158,11,0.08);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: var(--warning);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎓 Тренажёр ОГЭ — Speaking</h1>
+        <p>Подготовка к устной части экзамена по английскому языку (формат ФИПИ)</p>
+    </div>
+    
+    <div class="container">
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showScreen('home')">🏠 Главная</div>
+            <div class="nav-tab" onclick="showScreen('task1')">📖 Задание 1 <span class="badge">Чтение</span></div>
+            <div class="nav-tab" onclick="showScreen('task2dialog')">📞 Задание 2 <span class="badge">Расспрос</span></div>
+            <div class="nav-tab" onclick="showScreen('task2')">✉️ Задание 3 <span class="badge">Письмо</span></div>
+            <div class="nav-tab" onclick="showScreen('task3')">🎤 Задание 4 <span class="badge">Монолог</span></div>
+        </div>
+        
+        <!-- HOME SCREEN -->
+        <div id="screen-home" class="screen active fade-in">
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📋</div>
+                    Структура устной части ОГЭ (ФИПИ)
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">
+                    Устная часть ОГЭ по английскому языку состоит из 4 заданий. Общее время выполнения — около 15 минут. Выберите задание для тренировки.
+                </p>
+            </div>
+            
+            <div class="task-grid">
+                <div class="task-card" onclick="showScreen('task1')">
+                    <div class="task-number">01</div>
+                    <h3>Чтение вслух</h3>
+                    <p>Прочитайте текст вслух, соблюдая правила произношения, интонации и пауз</p>
+                    <div class="meta">
+                        <span>⏱ 2 мин</span>
+                        <span>📊 7 баллов</span>
+                    </div>
+                </div>
+                
+                <div class="task-card" onclick="showScreen('task2dialog')">
+                    <div class="task-number">02</div>
+                    <h3>Диалог-расспрос</h3>
+                    <p>Задайте 6 прямых вопросов по предложенной теме в рамках заданной ситуации</p>
+                    <div class="meta">
+                        <span>⏱ 40 сек × 6</span>
+                        <span>📊 7 баллов</span>
+                    </div>
+                </div>
+                
+                <div class="task-card" onclick="showScreen('task2')">
+                    <div class="task-number">03</div>
+                    <h3>Электронное письмо</h3>
+                    <p>Ответьте на 3 вопроса друга в формате электронного письма (100–120 слов)</p>
+                    <div class="meta">
+                        <span>⏱ 10 мин</span>
+                        <span>📊 7 баллов</span>
+                    </div>
+                </div>
+                
+                <div class="task-card" onclick="showScreen('task3')">
+                    <div class="task-number">04</div>
+                    <h3>Монолог</h3>
+                    <p>Подготовьте монолог по предложенному плану на заданную тему</p>
+                    <div class="meta">
+                        <span>⏱ 1.5 + 2 мин</span>
+                        <span>📊 7 баллов</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">💡</div>
+                    Общие рекомендации
+                </div>
+                <div class="tips-box">
+                    <h4>💡 Советы для успешной сдачи</h4>
+                    <ul>
+                        <li>Говорите чётко и уверенно, не торопитесь</li>
+                        <li>В диалоге-расспросе задавайте только прямые вопросы (без "Can you tell me...")</li>
+                        <li>Соблюдайте интонацию и паузы между предложениями</li>
+                        <li>Используйте разнообразные грамматические конструкции</li>
+                        <li>Следите за временем — не тратьте слишком много на одно задание</li>
+                        <li>Практикуйтесь каждый день — даже 15 минут дают результат</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="value" id="total-sessions">0</div>
+                    <div class="label">Тренировок</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="total-time">0</div>
+                    <div class="label">Минут практики</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="task1-done">0</div>
+                    <div class="label">Задание 1</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="task2dialog-done">0</div>
+                    <div class="label">Задание 2</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="task2-done">0</div>
+                    <div class="label">Задание 3</div>
+                </div>
+                <div class="stat-item">
+                    <div class="value" id="task3-done">0</div>
+                    <div class="label">Задание 4</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TASK 1: READING -->
+        <div id="screen-task1" class="screen fade-in">
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📖</div>
+                    Задание 1 — Чтение вслух
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">
+                    Прочитайте текст вслух. У вас есть <strong>2 минуты</strong>. Говорите чётко, соблюдая интонацию и паузы.
+                </p>
+                
+                <div class="variant-selector">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Вариант:</span>
+                    <button class="variant-btn active" onclick="changeTask1Variant(0)">Вариант 1</button>
+                    <button class="variant-btn" onclick="changeTask1Variant(1)">Вариант 2</button>
+                    <button class="variant-btn" onclick="changeTask1Variant(2)">Вариант 3</button>
+                    <button class="variant-btn" onclick="changeTask1Variant(3)">Вариант 4</button>
+                    <button class="variant-btn" onclick="changeTask1Variant(4)">Вариант 5</button>
+                </div>
+                
+                <div class="reading-text" id="task1-text"></div>
+                
+                <div class="timer-container">
+                    <div>
+                        <div class="timer" id="task1-timer">2:00</div>
+                        <div class="timer-label">Оставшееся время</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+                    <button class="btn btn-primary" id="task1-start-btn" onclick="startTask1()">▶️ Начать чтение</button>
+                    <button class="btn btn-record recording hidden" id="task1-record-btn" onclick="toggleTask1Record()">🎤</button>
+                    <button class="btn btn-danger hidden" id="task1-stop-btn" onclick="stopTask1(true)">⏹ Завершить</button>
+                    <button class="btn btn-outline" onclick="resetTask1()">🔄 Сбросить</button>
+                </div>
+                
+                <div id="task1-transcript-container" class="hidden">
+                    <h4 style="margin-top: 20px; margin-bottom: 10px; color: var(--text-muted);">📝 Распознанный текст:</h4>
+                    <div class="transcript" id="task1-transcript"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📊</div>
+                    Критерии оценивания
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Произношение</strong> — звуки произнесены правильно (допускается 1–2 ошибки)</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Ударение</strong> — ударения в словах поставлены верно</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Фразовое ударение</strong> — логические выделения соблюдены</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Интонация</strong> — ритмико-интонационное оформление правильное</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Паузации</strong> — паузы на знаках препинания соблюдены</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Темп речи</strong> — скорость соответствует нормам</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Полнота</strong> — текст прочитан полностью, без пропусков и замен</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TASK 2: DIALOG (FIPY) -->
+        <div id="screen-task2dialog" class="screen fade-in">
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📞</div>
+                    Задание 2 — Диалог-расспрос
+                </div>
+                
+                <div class="fipi-note">
+                    <span style="font-size: 1.3rem;">📌</span>
+                    <span>Формат ФИПИ: представьте, что вы звоните своему англоязычному другу. Задайте ему <strong>6 прямых вопросов</strong> по заданной теме. На каждый вопрос — 40 секунд.</span>
+                </div>
+                
+                <p style="color: var(--text-muted); margin-bottom: 15px;">
+                    Прочитайте ситуацию и задайте 6 вопросов в соответствии с пунктами плана. Вопросы должны быть <strong>прямыми</strong> (без косвенных конструкций).
+                </p>
+                
+                <div class="variant-selector">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Вариант:</span>
+                    <button class="variant-btn active" onclick="changeDialogVariant(0)">Вариант 1</button>
+                    <button class="variant-btn" onclick="changeDialogVariant(1)">Вариант 2</button>
+                    <button class="variant-btn" onclick="changeDialogVariant(2)">Вариант 3</button>
+                    <button class="variant-btn" onclick="changeDialogVariant(3)">Вариант 4</button>
+                    <button class="variant-btn" onclick="changeDialogVariant(4)">Вариант 5</button>
+                </div>
+                
+                <div class="dialog-situation" id="dialog-situation"></div>
+                
+                <h4 style="margin-bottom: 10px; color: var(--primary-light);">📋 Пункты плана (что нужно спросить):</h4>
+                <ul class="plan-list" id="dialog-plan"></ul>
+                
+                <div class="question-progress" id="dialog-dots"></div>
+                
+                <div class="current-question-box hidden" id="dialog-current-box">
+                    <div class="q-num" id="dialog-current-num">Question 1 of 6</div>
+                    <div class="q-text" id="dialog-current-text"></div>
+                </div>
+                
+                <div class="timer-container">
+                    <div>
+                        <div class="timer" id="dialog-timer">0:40</div>
+                        <div class="timer-label" id="dialog-timer-label">Готов к началу</div>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="fill" id="dialog-progress" style="width: 0%"></div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+                    <button class="btn btn-primary" id="dialog-start-btn" onclick="startDialog()">🎙 Начать опрос</button>
+                    <button class="btn btn-record recording hidden" id="dialog-record-btn" onclick="toggleDialogRecord()">🎤</button>
+                    <button class="btn btn-success hidden" id="dialog-next-btn" onclick="nextDialogQuestion()">➡️ Следующий вопрос</button>
+                    <button class="btn btn-danger hidden" id="dialog-stop-btn" onclick="stopDialog(true)">⏹ Завершить</button>
+                    <button class="btn btn-outline" onclick="resetDialog()">🔄 Сбросить</button>
+                </div>
+                
+                <div id="dialog-recorded-container" class="hidden" style="margin-top: 20px;">
+                    <h4 style="margin-bottom: 10px; color: var(--text-muted);">📝 Ваши записанные вопросы:</h4>
+                    <div id="dialog-recorded-list"></div>
+                </div>
+                
+                <div class="model-answer-toggle">
+                    <button class="btn btn-success" id="dialog-show-model-btn" onclick="toggleDialogModel()">
+                        💡 Показать эталонные вопросы
+                    </button>
+                </div>
+                
+                <div class="model-answer hidden" id="dialog-model-answer">
+                    <div class="model-answer-header">
+                        <h4>✅ Эталонные вопросы</h4>
+                        <div class="model-answer-meta">
+                            <span class="meta-badge">6 questions</span>
+                        </div>
+                    </div>
+                    <div class="model-answer-text" id="dialog-model-text"></div>
+                    
+                    <div class="useful-phrases">
+                        <h5>📌 Правила задания 2 (по ФИПИ):</h5>
+                        <ul>
+                            <li>Задавайте только прямые вопросы</li>
+                            <li>Не используйте "Can you tell me..."</li>
+                            <li>Вопрос должен точно соответствовать пункту плана</li>
+                            <li>Используйте правильную вопросительную структуру</li>
+                            <li>Соблюдайте интонацию вопроса ↗</li>
+                            <li>Избегайте односложных вопросов</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📊</div>
+                    Критерии оценивания
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Соответствие пункту плана</strong> — вопрос точно раскрывает заданный аспект</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Прямой вопрос</strong> — использована правильная вопросительная структура</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Грамматика</strong> — правильная форма вопроса (общий/специальный/альтернативный)</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Лексика</strong> — уместный словарный запас по теме</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Произношение</strong> — понятность и правильность звуков</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Интонация</strong> — вопросительная интонация ↗</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Количество</strong> — задано ровно 6 вопросов</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TASK 3: EMAIL -->
+        <div id="screen-task2" class="screen fade-in">
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">✉️</div>
+                    Задание 3 — Электронное письмо
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">
+                    Прочитайте письмо друга и ответьте на его вопросы. Объём: <strong>100–120 слов</strong>. Время: <strong>10 минут</strong>.
+                </p>
+                
+                <div class="variant-selector">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Вариант:</span>
+                    <button class="variant-btn active" onclick="changeTask2Variant(0)">Вариант 1</button>
+                    <button class="variant-btn" onclick="changeTask2Variant(1)">Вариант 2</button>
+                    <button class="variant-btn" onclick="changeTask2Variant(2)">Вариант 3</button>
+                    <button class="variant-btn" onclick="changeTask2Variant(3)">Вариант 4</button>
+                    <button class="variant-btn" onclick="changeTask2Variant(4)">Вариант 5</button>
+                </div>
+                
+                <div class="email-template" id="task2-incoming"></div>
+                
+                <div class="timer-container">
+                    <div>
+                        <div class="timer" id="task2-timer">10:00</div>
+                        <div class="timer-label">Оставшееся время</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; margin: 15px 0; flex-wrap: wrap;">
+                    <button class="btn btn-primary" id="task2-start-btn" onclick="startTask2()">▶️ Начать письмо</button>
+                    <button class="btn btn-danger hidden" id="task2-finish-btn" onclick="finishTask2(true)">✅ Завершить</button>
+                    <button class="btn btn-outline" onclick="resetTask2()">🔄 Сбросить</button>
+                </div>
+                
+                <div id="task2-form" class="hidden">
+                    <div class="form-group">
+                        <label>Ваш ответ (электронное письмо):</label>
+                        <textarea id="task2-answer" rows="12" placeholder="Напишите ваше электронное письмо здесь...&#10;&#10;Dear ..., &#10;&#10;Thank you for your email. ..." oninput="updateWordCount()"></textarea>
+                        <div class="word-counter" id="task2-wordcount">Слов: 0 / 100–120</div>
+                    </div>
+                </div>
+                
+                <div class="model-answer-toggle">
+                    <button class="btn btn-success" id="task2-show-model-btn" onclick="toggleTask2Model()">
+                        💡 Показать пример ответа
+                    </button>
+                </div>
+                
+                <div class="model-answer hidden" id="task2-model-answer">
+                    <div class="model-answer-header">
+                        <h4>✅ Эталонный ответ</h4>
+                        <div class="model-answer-meta">
+                            <span class="meta-badge" id="task2-model-words">Слов: 0</span>
+                            <span class="meta-badge">100–120 слов</span>
+                        </div>
+                    </div>
+                    <div class="model-answer-text email-style" id="task2-model-text"></div>
+                    <div class="useful-phrases" id="task2-useful-phrases"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📊</div>
+                    Критерии оценивания
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Решение коммуникативной задачи</strong> — даны ответы на все 3 вопроса</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Организация текста</strong> — есть обращение, благодарность, завершение</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Объём</strong> — 100–120 слов (допускается 90–132)</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Лексика</strong> — словарный запас соответствует теме</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Грамматика</strong> — грамматические структуры использованы верно</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Орфография и пунктуация</strong> — не более 2 негрубых ошибок</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TASK 4: MONOLOGUE -->
+        <div id="screen-task3" class="screen fade-in">
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">🎤</div>
+                    Задание 4 — Монологическое высказывание
+                </div>
+                <p style="color: var(--text-muted); margin-bottom: 15px;">
+                    Вам будет дана тема и план. У вас <strong>1.5 минуты</strong> на подготовку и <strong>2 минуты</strong> на ответ (10–12 фраз).
+                </p>
+                
+                <div class="variant-selector">
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Вариант:</span>
+                    <button class="variant-btn active" onclick="changeTask3Variant(0)">Вариант 1</button>
+                    <button class="variant-btn" onclick="changeTask3Variant(1)">Вариант 2</button>
+                    <button class="variant-btn" onclick="changeTask3Variant(2)">Вариант 3</button>
+                    <button class="variant-btn" onclick="changeTask3Variant(3)">Вариант 4</button>
+                    <button class="variant-btn" onclick="changeTask3Variant(4)">Вариант 5</button>
+                </div>
+                
+                <div id="task3-topic" style="margin-bottom: 15px;"></div>
+                
+                <h4 style="margin-bottom: 10px; color: var(--primary-light);">📋 План ответа:</h4>
+                <ul class="plan-list" id="task3-plan"></ul>
+                
+                <div class="timer-container">
+                    <div>
+                        <div class="timer" id="task3-timer">1:30</div>
+                        <div class="timer-label" id="task3-timer-label">Подготовка</div>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="fill" id="task3-progress" style="width: 0%"></div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+                    <button class="btn btn-primary" id="task3-prepare-btn" onclick="startTask3Prepare()">📝 Начать подготовку</button>
+                    <button class="btn btn-record hidden" id="task3-record-btn" onclick="toggleTask3Record()">🎤 Записать</button>
+                    <button class="btn btn-danger hidden" id="task3-stop-btn" onclick="stopTask3(true)">⏹ Завершить</button>
+                    <button class="btn btn-outline" onclick="resetTask3()">🔄 Сбросить</button>
+                </div>
+                
+                <div id="task3-transcript-container" class="hidden">
+                    <h4 style="margin-top: 20px; margin-bottom: 10px; color: var(--text-muted);">📝 Распознанный текст:</h4>
+                    <div class="transcript" id="task3-transcript"></div>
+                    <div class="word-counter" id="task3-sentence-count">Фраз: 0 / 10–12</div>
+                </div>
+                
+                <div class="model-answer-toggle">
+                    <button class="btn btn-success" id="task3-show-model-btn" onclick="toggleTask3Model()">
+                        💡 Показать пример ответа
+                    </button>
+                </div>
+                
+                <div class="model-answer hidden" id="task3-model-answer">
+                    <div class="model-answer-header">
+                        <h4>✅ Эталонный монолог</h4>
+                        <div class="model-answer-meta">
+                            <span class="meta-badge" id="task3-model-sentences">Фраз: 0</span>
+                            <span class="meta-badge">10–12 фраз</span>
+                        </div>
+                    </div>
+                    <div class="model-answer-text" id="task3-model-text"></div>
+                    <div class="useful-phrases" id="task3-useful-phrases"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📊</div>
+                    Критерии оценивания
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Решение коммуникативной задачи</strong> — раскрыты все пункты плана</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Организация высказывания</strong> — логичность, средства связи</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Объём</strong> — 10–12 фраз (не менее 10)</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Лексика</strong> — разнообразие и уместность словаря</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Грамматика</strong> — правильность грамматических форм</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Произношение</strong> — понятность и правильность звуков</div>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" disabled>
+                    <div><strong>Время</strong> — уложились в 2 минуты</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ============ MODAL ============ -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal">
+            <div class="modal-icon" id="modal-icon">✅</div>
+            <h3 id="modal-title">Результат</h3>
+            <p id="modal-message">Сообщение</p>
+            <div class="modal-stats" id="modal-stats"></div>
+            <div class="modal-actions" id="modal-actions">
+                <button class="btn btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== DATA ====================
+        
+        const task1Texts = [
+            `Health is one of the most important things in our life. Without good health, a person cannot fully enjoy life, work, or study. That is why it is essential to take care of your body and mind from an early age.\n\nThere are several ways to stay healthy. First of all, you need to eat a balanced diet that includes fresh fruits, vegetables, and proteins. Secondly, regular physical activity helps to strengthen your muscles and improve your mood. Many doctors recommend at least thirty minutes of exercise every day.\n\nSleep is another crucial factor. Teenagers need about eight to ten hours of sleep each night to feel energetic and focused during the day. Finally, spending time outdoors and communicating with friends and family contributes to emotional well-being.\n\nIn conclusion, maintaining a healthy lifestyle requires effort and discipline, but the results are definitely worth it.`,
+            `London is the capital of Great Britain and one of the largest cities in Europe. It stands on the River Thames and has a population of about nine million people. The city has a rich history that goes back nearly two thousand years.\n\nThere are many famous landmarks in London. The Tower of London, which was built in the eleventh century, is one of the most visited places. Buckingham Palace is the official residence of the British monarch, and tourists gather there every day to watch the Changing of the Guard ceremony.\n\nLondon is also known for its museums and galleries. The British Museum houses millions of artefacts from around the world, while the National Gallery displays masterpieces by famous European painters. Moreover, the city offers excellent theatres, including the world-famous West End.\n\nDespite being a modern metropolis, London has managed to preserve its historical charm. Its parks, such as Hyde Park and Regent's Park, provide peaceful spaces in the heart of the busy city.`,
+            `The Internet has completely changed the way we live, work, and communicate. Today, it is almost impossible to imagine daily life without this incredible technology. People use the Internet for education, entertainment, shopping, and staying in touch with friends and family.\n\nOne of the main advantages of the Internet is access to information. Students can find materials for their projects, and adults can learn new skills through online courses. Furthermore, social media platforms allow people to share their experiences and connect with others regardless of distance.\n\nHowever, the Internet also has some disadvantages. Spending too much time online can lead to health problems, such as poor eyesight and lack of physical activity. In addition, there is a risk of encountering unreliable information or becoming a victim of cybercrime.\n\nTo sum up, the Internet is a powerful tool that can greatly improve our lives if used wisely. It is important to develop good digital habits and balance online and offline activities.`,
+            `Australia is a fascinating country located in the Southern Hemisphere. It is both a continent and an island, surrounded by the Indian and Pacific Oceans. The capital city is Canberra, but the largest and most well-known city is Sydney.\n\nAustralia is famous for its unique wildlife. Animals such as kangaroos, koalas, and wombats can only be found there. The Great Barrier Reef, which is the largest coral reef system in the world, attracts millions of tourists every year. It is home to thousands of species of fish and other marine creatures.\n\nThe climate in Australia varies greatly depending on the region. The northern part has a tropical climate, while the southern regions experience four distinct seasons. Summers can be extremely hot, especially in the central desert areas.\n\nAustralian culture is a mix of indigenous traditions and influences from immigrants around the world. The country is known for its friendly people, beautiful beaches, and outdoor lifestyle. Many Australians enjoy surfing, barbecues, and spending time in nature.`,
+            `Education plays a vital role in shaping a person's future. It provides knowledge, develops critical thinking, and helps individuals become responsible members of society. Different countries have different education systems, but the main goal remains the same — to prepare young people for adult life.\n\nIn most countries, children start school at the age of six or seven. Primary education usually lasts for six years, during which pupils learn basic subjects such as mathematics, science, languages, and history. After that, they move on to secondary school, where the curriculum becomes more specialised.\n\nHigher education is another important stage. Universities and colleges offer a wide range of programmes that allow students to gain expertise in their chosen field. A degree can significantly increase career opportunities and earning potential.\n\nHowever, education is not limited to schools and universities. Lifelong learning has become increasingly important in today's rapidly changing world. People continue to acquire new skills throughout their lives to stay competitive in the job market and adapt to new technologies.`
+        ];
+        
+        // ===== DIALOG DATA (FIPY format) — points in ENGLISH =====
+        const dialogData = [
+            {
+                situation: `You are going to do a project with your English-speaking pen-friend <strong>Ben</strong> about <strong>school life in Russia</strong>. You have decided to find out some information about his school. Ask Ben <strong>6 questions</strong> about his school life according to the plan below.`,
+                points: [
+                    "what time lessons start at his school",
+                    "how many subjects students usually study a day",
+                    "whether students have to wear a school uniform",
+                    "what after-school activities his school offers",
+                    "how they celebrate holidays at his school",
+                    "what he likes most about his school"
+                ],
+                modelQuestions: [
+                    "What time do your lessons start?",
+                    "How many subjects do you usually study a day?",
+                    "Do you have to wear a school uniform?",
+                    "What after-school activities does your school offer?",
+                    "How do you celebrate holidays at your school?",
+                    "What do you like most about your school?"
+                ],
+                phrases: [
+                    "What time do ... start?",
+                    "How many ... do you ...?",
+                    "Do you have to ...?",
+                    "What ... does your school offer?",
+                    "How do you ...?",
+                    "What do you like most about ...?"
+                ]
+            },
+            {
+                situation: `You are going to do a project with your English-speaking pen-friend <strong>Tom</strong> about <strong>sports and healthy lifestyle</strong>. You have decided to find out some information about his sports activities. Ask Tom <strong>6 questions</strong> about his sports life according to the plan below.`,
+                points: [
+                    "what sport he does",
+                    "how often he trains",
+                    "where he usually does sports",
+                    "whether he takes part in any sports competitions",
+                    "what sport he would like to try",
+                    "why he thinks sport is important for teenagers"
+                ],
+                modelQuestions: [
+                    "What sport do you do?",
+                    "How often do you train?",
+                    "Where do you usually do sports?",
+                    "Do you take part in any sports competitions?",
+                    "What sport would you like to try?",
+                    "Why do you think sport is important for teenagers?"
+                ],
+                phrases: [
+                    "What sport do you do?",
+                    "How often do you ...?",
+                    "Where do you usually ...?",
+                    "Do you take part in ...?",
+                    "What ... would you like to try?",
+                    "Why do you think ...?"
+                ]
+            },
+            {
+                situation: `You are going to do a project with your English-speaking pen-friend <strong>Anna</strong> about <strong>travelling</strong>. You have decided to find out some information about her travel plans. Ask Anna <strong>6 questions</strong> about her plans according to the plan below.`,
+                points: [
+                    "when she is going to travel",
+                    "what country she is going to visit",
+                    "who she is going to travel with",
+                    "how she is going to get there",
+                    "what sights she would like to visit",
+                    "what she is going to take with her"
+                ],
+                modelQuestions: [
+                    "When are you going to travel?",
+                    "What country are you going to visit?",
+                    "Who are you going to travel with?",
+                    "How are you going to get there?",
+                    "What sights would you like to visit?",
+                    "What are you going to take with you?"
+                ],
+                phrases: [
+                    "When are you going to ...?",
+                    "What country are you going to ...?",
+                    "Who are you going to ... with?",
+                    "How are you going to ...?",
+                    "What ... would you like to ...?",
+                    "What are you going to take with you?"
+                ]
+            },
+            {
+                situation: `You are going to do a project with your English-speaking pen-friend <strong>Jack</strong> about <strong>free time activities of teenagers</strong>. You have decided to find out some information about his free time. Ask Jack <strong>6 questions</strong> about his free time according to the plan below.`,
+                points: [
+                    "what he usually does in his free time",
+                    "whether he has any hobbies and what they are",
+                    "how often he meets his friends",
+                    "what kind of films he likes watching",
+                    "whether he likes reading and what books he reads",
+                    "how he usually spends his weekends"
+                ],
+                modelQuestions: [
+                    "What do you usually do in your free time?",
+                    "Do you have any hobbies? What are they?",
+                    "How often do you meet your friends?",
+                    "What kind of films do you like watching?",
+                    "Do you like reading? What books do you read?",
+                    "How do you usually spend your weekends?"
+                ],
+                phrases: [
+                    "What do you usually do in your free time?",
+                    "Do you have any hobbies?",
+                    "How often do you ...?",
+                    "What kind of ... do you like ...?",
+                    "Do you like ...? What ...?",
+                    "How do you usually spend ...?"
+                ]
+            },
+            {
+                situation: `You are going to do a project with your English-speaking pen-friend <strong>Sarah</strong> about <strong>choosing gifts</strong>. You have decided to find out some information about her gift-giving habits. Ask Sarah <strong>6 questions</strong> about choosing gifts according to the plan below.`,
+                points: [
+                    "on what occasions she usually gives presents",
+                    "who she gave a present to recently",
+                    "what she usually gives to her friends",
+                    "how much money she usually spends on a present",
+                    "where she prefers to buy presents",
+                    "whether she likes getting unexpected presents"
+                ],
+                modelQuestions: [
+                    "On what occasions do you usually give presents?",
+                    "Who did you give a present to recently?",
+                    "What do you usually give to your friends?",
+                    "How much money do you usually spend on a present?",
+                    "Where do you prefer to buy presents?",
+                    "Do you like getting unexpected presents?"
+                ],
+                phrases: [
+                    "On what occasions do you ...?",
+                    "Who did you ... recently?",
+                    "What do you usually ...?",
+                    "How much money do you ...?",
+                    "Where do you prefer to ...?",
+                    "Do you like ...?"
+                ]
+            }
+        ];
+        
+        const task2Emails = [
+            {
+                from: "Tom",
+                text: `From: Tom@mail.uk\nTo: Russian_friend@oge.ru\nSubject: Hobbies\n\nHi!\n\nThanks for your last email. I was glad to hear from you again. In your message you asked me about my free time. Well, I've recently started learning to play the guitar. It's quite difficult but very exciting!\n\nBy the way, what do you usually do in your free time? Do you have any hobbies? What kind of music do you like?\n\nAnyway, I'd better go now. My mum is calling me for dinner.\n\nWrite back soon!\n\nBest wishes,\nTom`,
+                questions: ["What do you usually do in your free time?", "Do you have any hobbies? What are they?", "What kind of music do you like?"]
+            },
+            {
+                from: "Sarah",
+                text: `From: Sarah@mail.uk\nTo: Russian_friend@oge.ru\nSubject: School life\n\nHello!\n\nThank you for your recent email. I hope you're doing well. You asked about my school in your last letter. I really enjoy studying here, especially science lessons.\n\nI've got some questions about your school life. What time does your school day start and finish? What is your favourite subject and why? Do you take part in any school activities or clubs?\n\nSorry, I have to go now — I've got a lot of homework to do.\n\nDrop me a line!\n\nLove,\nSarah`,
+                questions: ["What time does your school day start and finish?", "What is your favourite subject and why?", "Do you take part in any school activities or clubs?"]
+            },
+            {
+                from: "Mike",
+                text: `From: Mike@mail.uk\nTo: Russian_friend@oge.ru\nSubject: Weather\n\nHi there!\n\nGreat to hear from you! Thanks for your email. You wanted to know about the weather in my city. Well, it's quite changeable here — it can be sunny in the morning and rainy by lunchtime!\n\nAnyway, tell me about the weather where you live. What's the weather like in your city now? What season do you like best and why? What do you usually do when the weather is bad?\n\nThat's all for now. Write back soon!\n\nCheers,\nMike`,
+                questions: ["What's the weather like in your city now?", "What season do you like best and why?", "What do you usually do when the weather is bad?"]
+            },
+            {
+                from: "Anna",
+                text: `From: Anna@mail.uk\nTo: Russian_friend@oge.ru\nSubject: Travel\n\nDear friend,\n\nThanks for your email. I was so happy to get it! You asked me about travelling. I love visiting new places! Last summer my family went to Italy and it was amazing.\n\nI'd love to know more about your travelling experiences. Have you ever travelled to another country? Where would you like to go and why? Do you prefer travelling with your family or with friends?\n\nI must go now — it's time for my English lesson.\n\nKeep in touch!\n\nAnna`,
+                questions: ["Have you ever travelled to another country? Where?", "Where would you like to go and why?", "Do you prefer travelling with your family or with friends?"]
+            },
+            {
+                from: "Jack",
+                text: `From: Jack@mail.uk\nTo: Russian_friend@oge.ru\nSubject: Technology\n\nHi!\n\nThanks for your last message! It's always great to hear from you. You asked me about gadgets. I'm crazy about my new smartphone — I use it every day!\n\nI've got a few questions for you. What gadgets do you use most often? How do you think technology has changed people's lives? Would you like to have a robot at home? Why or why not?\n\nOK, I'd better go. My friends are waiting for me.\n\nAll the best,\nJack`,
+                questions: ["What gadgets do you use most often?", "How do you think technology has changed people's lives?", "Would you like to have a robot at home? Why or why not?"]
+            }
+        ];
+        
+        const task2ModelAnswers = [
+            {
+                text: `Dear Tom,\n\nThank you for your email. I was glad to hear from you again. It's great that you've started learning the guitar! I'm sure you'll play very well soon.\n\nAs for your questions, in my free time I usually read books, watch films and meet my friends. We often go for a walk in the park or play computer games together. I have a few hobbies. I've been doing photography for two years, and I also enjoy drawing. It helps me relax after school.\n\nAs for music, I like pop and rock music best. My favourite band is Imagine Dragons because their songs are energetic and meaningful.\n\nThat's all for now. Write back soon!\n\nBest wishes,\nSasha`,
+                phrases: ["Thank you for your email", "I was glad to hear from you", "As for your questions, ...", "In my free time I usually ...", "I've been doing ... for ... years", "That's all for now", "Write back soon", "Best wishes"]
+            },
+            {
+                text: `Dear Sarah,\n\nThanks for your recent email. I hope you're doing well too. I'm happy to hear that you enjoy your science lessons!\n\nYou asked me about my school life. My school day starts at 8.30 a.m. and finishes at 2.30 p.m. I usually have five or six lessons a day. My favourite subject is English because I like learning new words and communicating with people from different countries. I also find history very interesting.\n\nYes, I take part in several school activities. I'm a member of the drama club and I often help to organise school concerts. I also volunteer at the school library twice a week.\n\nSorry, I have to go now — I need to do my homework.\n\nWrite back soon!\n\nLove,\nSasha`,
+                phrases: ["Thanks for your recent email", "You asked me about ...", "My school day starts at ...", "My favourite subject is ... because ...", "I take part in ...", "I'm a member of ...", "Sorry, I have to go now", "Write back soon"]
+            },
+            {
+                text: `Dear Mike,\n\nThanks for your email. It was great to hear from you again. I understand how changeable the weather can be in your city!\n\nLet me tell you about the weather here. At the moment it is quite cold and snowy in my city. The temperature is about minus ten degrees, and there is a lot of snow outside. As for my favourite season, I like summer best because the days are long and warm, and I can swim in the river and spend time with my friends outdoors. When the weather is bad, I usually stay at home, read books, watch films or play board games with my family. Sometimes I help my mum cook something tasty.\n\nThat's all for now. Write back soon!\n\nBest wishes,\nSasha`,
+                phrases: ["Thanks for your email", "Let me tell you about ...", "At the moment it is ...", "As for my favourite season, ...", "... because ...", "When the weather is bad, I usually ...", "That's all for now", "Write back soon"]
+            },
+            {
+                text: `Dear Anna,\n\nThank you for your email. I was so happy to hear from you! Italy is a wonderful country — I'm sure you had a fantastic time there.\n\nYou asked me about my travelling experiences. Yes, I have travelled abroad several times. Last year my family and I went to Turkey, and two years ago we visited Egypt. Both trips were unforgettable! As for where I'd like to go, I'd really love to visit Japan because I'm interested in its culture, traditions and beautiful nature. I also dream of seeing Tokyo and Mount Fuji.\n\nI prefer travelling with my family because we can share our emotions and spend quality time together. However, travelling with friends is also fun.\n\nI must go now — it's time for dinner.\n\nKeep in touch!\nSasha`,
+                phrases: ["Thank you for your email", "I was so happy to hear from you", "You asked me about ...", "Yes, I have ... several times", "As for ..., I'd really love to ...", "... because ...", "I prefer ... because ...", "I must go now", "Keep in touch"]
+            },
+            {
+                text: `Dear Jack,\n\nThanks for your last message. I was glad to hear from you again. It's cool that you've got a new smartphone!\n\nAs for your questions, I use my smartphone, laptop and headphones most often. I use my phone every day to chat with friends, listen to music and do homework. My laptop helps me with school projects, and I use my headphones when I study or go for a walk.\n\nI think technology has changed people's lives a lot. It has made communication much faster and easier, and we can now find any information online in seconds. However, some people spend too much time online, which is not always good.\n\nPersonally, I would like to have a robot at home because it could help my parents with cleaning and cooking. That would save a lot of time!\n\nThat's all for now. Write back soon!\n\nBest wishes,\nSasha`,
+                phrases: ["Thanks for your last message", "As for your questions, ...", "I use ... most often", "I think ... has changed ...", "It has made ...", "However, ...", "Personally, I would like to ... because ...", "That's all for now", "Write back soon"]
+            }
+        ];
+        
+        const task3Topics = [
+            { topic: "You are going to give a talk about YOUR FAMILY.", plan: ["What members does your family consist of?", "What do you usually do together in your free time?", "What family traditions do you have?", "What role does your family play in your life?"] },
+            { topic: "You are going to give a talk about SPORTS.", plan: ["What kinds of sport are popular among teenagers in Russia?", "What sport do you do and how often?", "Why is it important for young people to do sports?", "What is your attitude to extreme sports?"] },
+            { topic: "You are going to give a talk about YOUR FUTURE PROFESSION.", plan: ["What profession would you like to choose and why?", "What school subjects are important for your future career?", "What qualities should a good specialist have?", "How do you think you will choose your future job?"] },
+            { topic: "You are going to give a talk about TRAVELLING.", plan: ["Why do people travel?", "What is the most interesting place you have ever visited?", "What kind of travelling do you prefer: by car, by train or by plane?", "Would you like to travel to another country? Where and why?"] },
+            { topic: "You are going to give a talk about THE ENVIRONMENT.", plan: ["What environmental problems exist in your region?", "What do you and your family do to help protect the environment?", "Why is it important to take care of nature?", "What can teenagers do to make the world cleaner?"] }
+        ];
+        
+        const task3ModelAnswers = [
+            {
+                text: `I'm going to give a talk about my family.\n\nMy family consists of four members: my mum, my dad, my younger sister and me. We live together in a flat in the centre of our city. My mum works as a teacher and my dad is an engineer. My sister is ten years old and she goes to primary school.\n\nIn our free time we usually do different things together. At weekends we often go for a walk in the park, visit our grandparents or watch films at home. Sometimes we play board games or cook dinner together. I really enjoy these moments because we can talk and laugh a lot.\n\nWe also have some family traditions. Every Sunday we have a big family lunch. On New Year's Eve we decorate the Christmas tree together and make wishes. Every summer we travel to the seaside and spend two weeks there.\n\nI think my family plays a very important role in my life. My parents always support me, help me with my problems and give me good advice. I can share my secrets with them and I know they will understand me. I love my family very much and I am grateful for everything they do for me.\n\nThat's all I wanted to say about my family.`,
+                phrases: ["I'm going to give a talk about ...", "My family consists of ...", "In our free time we usually ...", "At weekends we often ...", "We also have some family traditions", "Every Sunday / Every summer ...", "I think ... plays an important role in ...", "My parents always support me", "That's all I wanted to say about ..."]
+            },
+            {
+                text: `I'm going to give a talk about sports.\n\nIn Russia, many kinds of sport are popular among teenagers. Football and hockey are probably the most popular team sports. Many boys and girls also enjoy swimming, volleyball and basketball. In recent years, doing fitness and going to the gym have become very fashionable among young people.\n\nAs for me, I do swimming. I've been attending a swimming pool twice a week for three years already. I also try to do morning exercises every day and sometimes go jogging in the park near my house.\n\nI believe it is very important for young people to do sports. Firstly, regular physical activity helps teenagers stay healthy and strong. Secondly, sport teaches us discipline, patience and teamwork. Finally, doing sports is a great way to reduce stress after a long day at school.\n\nAs for extreme sports, I have a rather cautious attitude to them. On the one hand, they are exciting and help people overcome their fears. On the other hand, they can be very dangerous, especially for teenagers. That's why I think young people should only do extreme sports with professional trainers.\n\nThat's all I wanted to say about sports.`,
+                phrases: ["I'm going to give a talk about ...", "In Russia, ... are popular among ...", "As for me, I do ...", "I've been attending ... for ... years", "I believe it is very important ...", "Firstly, ... Secondly, ... Finally, ...", "As for ..., I have ... attitude to ...", "On the one hand, ... On the other hand, ...", "That's all I wanted to say about ..."]
+            },
+            {
+                text: `I'm going to give a talk about my future profession.\n\nI would like to choose the profession of an IT specialist. I've always been interested in computers and programming, and I enjoy solving logical problems. Besides, this profession is in great demand nowadays and gives good career opportunities.\n\nThere are several school subjects that are important for my future career. First of all, it is mathematics and informatics because they develop logical thinking. I also need English as most programming languages and documentation are in English. Physics is useful too because it helps to understand how different technologies work.\n\nIn my opinion, a good specialist should have many qualities. He or she should be responsible, hard-working and able to work in a team. A good specialist must also keep learning new things because technologies change very quickly. Creativity and the ability to solve problems are also very important.\n\nI think I will choose my future job carefully. I'm going to enter a university after school and get a good education. I also plan to do internships during my studies to get real work experience. I believe that with hard work and patience I will achieve my goal.\n\nThat's all I wanted to say about my future profession.`,
+                phrases: ["I'm going to give a talk about ...", "I would like to choose the profession of ...", "I've always been interested in ...", "There are several subjects that are important for ...", "First of all, ... because ...", "In my opinion, ... should have ...", "He or she should be ...", "I think I will ... carefully", "I'm going to enter ...", "That's all I wanted to say about ..."]
+            },
+            {
+                text: `I'm going to give a talk about travelling.\n\nPeople travel for different reasons. Some people travel to relax and have a rest from their daily routine. Others travel to learn about new cultures, try foreign food and visit famous landmarks. Many people also travel to visit their friends and relatives who live in other countries. For some, travelling is a way to learn a foreign language or to do business.\n\nThe most interesting place I have ever visited is Saint Petersburg. I went there with my family two years ago. We saw the Hermitage, walked along Nevsky Prospect and enjoyed the beautiful architecture of the city. I was especially impressed by the White Nights — it was a magical experience that I will never forget.\n\nAs for the kind of travelling, I prefer going by train. It is comfortable, safe and not too expensive. During a train journey I can enjoy the view from the window, read a book or talk to my family. Travelling by plane is faster but less romantic, and travelling by car can be tiring on long distances.\n\nI would definitely like to travel to another country. I dream of visiting Great Britain because I study English and I want to practise it with native speakers. I'd also love to see London, the birthplace of many famous writers and historical places.\n\nThat's all I wanted to say about travelling.`,
+                phrases: ["I'm going to give a talk about ...", "People ... for different reasons", "Some people ... Others ... Many people ...", "The most interesting place I have ever visited is ...", "I went there ... years ago", "I was especially impressed by ...", "As for ..., I prefer ...", "It is ... because ...", "I would definitely like to ... because ...", "That's all I wanted to say about ..."]
+            },
+            {
+                text: `I'm going to give a talk about the environment.\n\nUnfortunately, there are several environmental problems in my region. The air in our city is often polluted because of heavy traffic and factories. People also throw rubbish in the streets and near the river, which makes the water dirty. Another serious problem is that many trees are cut down to build new houses and shopping centres.\n\nMy family and I try to do our best to help protect the environment. We sort our rubbish into different bins: paper, plastic and glass. We also try to use less plastic — for example, we go shopping with reusable bags. Every spring we take part in a local clean-up day and plant trees in our neighbourhood. Besides, we save water and electricity at home.\n\nI think it is very important to take care of nature because we live on this planet and we depend on it. Clean air, fresh water and healthy forests are necessary for our health. If we don't protect the environment now, future generations will face serious problems.\n\nTeenagers can also do a lot to make the world cleaner. We can take part in ecological projects, collect waste paper and help to clean parks and rivers. We can also tell our friends and family about environmental problems and encourage them to live in a more eco-friendly way.\n\nThat's all I wanted to say about the environment.`,
+                phrases: ["I'm going to give a talk about ...", "Unfortunately, there are several ... problems", "The air / water is ... because of ...", "My family and I try to ...", "We sort our rubbish into ...", "Every spring we take part in ...", "I think it is very important ... because ...", "If we don't ..., ... will face ...", "Teenagers can also do a lot to ...", "We can also tell ... about ...", "That's all I wanted to say about ..."]
+            }
+        ];
+        
+        // ==================== STATE ====================
+        
+        let currentScreen = 'home';
+        let task1Variant = 0;
+        let task2Variant = 0;
+        let task3Variant = 0;
+        let dialogVariant = 0;
+        
+        let task1TimerInterval = null;
+        let task1TimeLeft = 120;
+        let task1Running = false;
+        let task1StartTime = null;
+        
+        let task2TimerInterval = null;
+        let task2TimeLeft = 600;
+        let task2Running = false;
+        let task2StartTime = null;
+        
+        let task3TimerInterval = null;
+        let task3TimeLeft = 90;
+        let task3Phase = 'idle';
+        let task3Running = false;
+        let task3StartTime = null;
+        
+        // Dialog state
+        let dialogTimerInterval = null;
+        let dialogTimeLeft = 40;
+        let dialogRunning = false;
+        let dialogCurrentQuestion = 0;
+        let dialogAnswers = [];
+        let dialogStartTime = null;
+        
+        let recognition1 = null;
+        let recognition3 = null;
+        let recognitionDialog = null;
+        let isRecording1 = false;
+        let isRecording3 = false;
+        let isRecordingDialog = false;
+        let transcript1 = '';
+        let transcript3 = '';
+        let transcriptDialog = '';
+        
+        let stats = JSON.parse(localStorage.getItem('oge_stats') || '{}');
+        stats = {
+            sessions: stats.sessions || 0,
+            minutes: stats.minutes || 0,
+            task1: stats.task1 || 0,
+            task2: stats.task2 || 0,
+            task3: stats.task3 || 0,
+            task2dialog: stats.task2dialog || 0,
+            ...stats
+        };
+        
+        // ==================== MODAL ====================
+        
+        function showModal({ icon = 'info', title = '', message = '', stats = null, actions = null }) {
+            const overlay = document.getElementById('modal-overlay');
+            const iconEl = document.getElementById('modal-icon');
+            iconEl.className = 'modal-icon ' + icon;
+            iconEl.textContent = icon === 'success' ? '✅' : icon === 'warning' ? '⚠️' : icon === 'danger' ? '❌' : 'ℹ️';
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').innerHTML = message;
+            
+            const statsEl = document.getElementById('modal-stats');
+            if (stats && stats.length > 0) {
+                statsEl.innerHTML = stats.map(s => `
+                    <div class="modal-stat">
+                        <div class="value">${s.value}</div>
+                        <div class="label">${s.label}</div>
+                    </div>
+                `).join('');
+                statsEl.style.display = 'grid';
+            } else {
+                statsEl.style.display = 'none';
+            }
+            
+            const actionsEl = document.getElementById('modal-actions');
+            if (actions && actions.length > 0) {
+                actionsEl.innerHTML = actions.map(a => `
+                    <button class="btn ${a.class || 'btn-primary'}" onclick="${a.onclick}">${a.label}</button>
+                `).join('');
+            } else {
+                actionsEl.innerHTML = '<button class="btn btn-primary" onclick="closeModal()">OK</button>';
+            }
+            
+            overlay.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+        
+        // ==================== NAVIGATION ====================
+        
+        function hasActiveSession() {
+            return task1Running || task2Running || task3Running || dialogRunning;
+        }
+        
+        function showScreen(screen) {
+            if (hasActiveSession() && screen !== currentScreen) {
+                showModal({
+                    icon: 'warning',
+                    title: 'Активная тренировка',
+                    message: 'У вас идёт тренировка. Если вы перейдёте на другой экран, она будет завершена, а результат сохранён.',
+                    actions: [
+                        { label: 'Остаться', class: 'btn-outline', onclick: 'closeModal()' },
+                        { label: 'Завершить и перейти', class: 'btn-primary', onclick: `forceSwitchScreen('${screen}')` }
+                    ]
+                });
+                return;
+            }
+            doSwitchScreen(screen);
+        }
+        
+        function forceSwitchScreen(screen) {
+            if (task1Running) stopTask1(true);
+            if (task2Running) finishTask2(true);
+            if (task3Running) stopTask3(true);
+            if (dialogRunning) stopDialog(true);
+            closeModal();
+            doSwitchScreen(screen);
+        }
+        
+        function doSwitchScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(`screen-${screen}`).classList.add('active');
+            const idx = screen === 'home' ? 0 : screen === 'task1' ? 1 : screen === 'task2dialog' ? 2 : screen === 'task2' ? 3 : 4;
+            document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+            
+            currentScreen = screen;
+            
+            if (screen === 'task1') loadTask1();
+            if (screen === 'task2dialog') loadDialog();
+            if (screen === 'task2') loadTask2();
+            if (screen === 'task3') loadTask3();
+            
+            updateStats();
+        }
+        
+        // ==================== TASK 1: READING ====================
+        
+        function loadTask1() {
+            const text = task1Texts[task1Variant].replace(/\n/g, '<br>');
+            document.getElementById('task1-text').innerHTML = text;
+        }
+        
+        function changeTask1Variant(idx) {
+            if (task1Running) {
+                showModal({ icon: 'warning', title: 'Идёт тренировка', message: 'Завершите текущую тренировку перед сменой варианта.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                return;
+            }
+            task1Variant = idx;
+            document.querySelectorAll('#screen-task1 .variant-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+            loadTask1();
+            resetTask1();
+        }
+        
+        function startTask1() {
+            if (task1Running) return;
+            task1Running = true;
+            task1TimeLeft = 120;
+            task1StartTime = Date.now();
+            
+            document.getElementById('task1-start-btn').classList.add('hidden');
+            document.getElementById('task1-record-btn').classList.remove('hidden');
+            document.getElementById('task1-stop-btn').classList.remove('hidden');
+            document.getElementById('task1-transcript-container').classList.remove('hidden');
+            
+            task1TimerInterval = setInterval(() => {
+                task1TimeLeft--;
+                updateTask1Timer();
+                if (task1TimeLeft <= 0) stopTask1(true);
+            }, 1000);
+            
+            updateTask1Timer();
+        }
+        
+        function updateTask1Timer() {
+            const min = Math.floor(task1TimeLeft / 60);
+            const sec = task1TimeLeft % 60;
+            const el = document.getElementById('task1-timer');
+            el.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+            el.classList.remove('warning', 'danger');
+            if (task1TimeLeft <= 15) el.classList.add('danger');
+            else if (task1TimeLeft <= 30) el.classList.add('warning');
+        }
+        
+        function cleanupTask1() {
+            task1Running = false;
+            clearInterval(task1TimerInterval);
+            task1TimerInterval = null;
+            if (isRecording1 && recognition1) {
+                try { recognition1.abort(); } catch(e) {}
+                isRecording1 = false;
+                recognition1 = null;
+            }
+            document.getElementById('task1-record-btn').classList.add('hidden');
+            document.getElementById('task1-stop-btn').classList.add('hidden');
+            document.getElementById('task1-start-btn').classList.remove('hidden');
+            document.getElementById('task1-record-btn').classList.remove('recording');
+        }
+        
+        function stopTask1(recordStats) {
+            if (!task1Running && !recordStats) return;
+            const elapsed = task1StartTime ? Math.round((Date.now() - task1StartTime) / 1000) : 0;
+            cleanupTask1();
+            if (recordStats && elapsed > 3) {
+                stats.sessions++;
+                stats.task1++;
+                stats.minutes += Math.max(1, Math.round(elapsed / 60));
+                localStorage.setItem('oge_stats', JSON.stringify(stats));
+                updateStats();
+                showModal({
+                    icon: 'success',
+                    title: 'Тренировка завершена!',
+                    message: 'Отличная работа! Проверьте распознанный текст и сравните с оригиналом.',
+                    stats: [{ value: Math.round(elapsed / 60) + ' мин', label: 'Время' }, { value: task1Variant + 1, label: 'Вариант' }]
+                });
+            }
+        }
+        
+        function resetTask1() {
+            cleanupTask1();
+            task1TimeLeft = 120;
+            task1StartTime = null;
+            transcript1 = '';
+            document.getElementById('task1-timer').textContent = '2:00';
+            document.getElementById('task1-timer').classList.remove('warning', 'danger');
+            document.getElementById('task1-transcript').textContent = '';
+            document.getElementById('task1-transcript-container').classList.add('hidden');
+        }
+        
+        function toggleTask1Record() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showModal({ icon: 'danger', title: 'Распознавание речи недоступно', message: 'Ваш браузер не поддерживает распознавание речи. Пожалуйста, используйте Google Chrome.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                return;
+            }
+            if (isRecording1) {
+                try { recognition1.stop(); } catch(e) {}
+                isRecording1 = false;
+                document.getElementById('task1-record-btn').classList.remove('recording');
+            } else {
+                startRecognition1();
+            }
+        }
+        
+        function startRecognition1() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition1 = new SpeechRecognition();
+            recognition1.lang = 'en-US';
+            recognition1.continuous = true;
+            recognition1.interimResults = true;
+            let shouldRestart = true;
+            recognition1.onresult = (event) => {
+                let interim = '', final = '';
+                for (let i = 0; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) final += event.results[i][0].transcript + ' ';
+                    else interim += event.results[i][0].transcript;
+                }
+                transcript1 = final;
+                document.getElementById('task1-transcript').textContent = final + interim;
+            };
+            recognition1.onerror = (e) => {
+                if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                    shouldRestart = false;
+                    showModal({ icon: 'danger', title: 'Нет доступа к микрофону', message: 'Разрешите доступ к микрофону в настройках браузера.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                }
+            };
+            recognition1.onend = () => {
+                if (shouldRestart && isRecording1) {
+                    try { recognition1.start(); } catch(e) { isRecording1 = false; }
+                }
+            };
+            try {
+                recognition1.start();
+                isRecording1 = true;
+                document.getElementById('task1-record-btn').classList.add('recording');
+            } catch(e) {}
+        }
+        
+        // ==================== TASK 2: DIALOG (FIPY) ====================
+        
+        function loadDialog() {
+            const data = dialogData[dialogVariant];
+            document.getElementById('dialog-situation').innerHTML = data.situation;
+            
+            // Points are in English — render with capitalization
+            const planList = document.getElementById('dialog-plan');
+            planList.innerHTML = data.points.map((item, i) => {
+                const capitalized = item.charAt(0).toUpperCase() + item.slice(1);
+                return `
+                    <li id="dialog-plan-item-${i}">
+                        <span class="num">${i + 1}</span>
+                        <span style="font-style: italic;">Find out ${capitalized}</span>
+                    </li>
+                `;
+            }).join('');
+            
+            // Dots
+            const dotsEl = document.getElementById('dialog-dots');
+            dotsEl.innerHTML = Array.from({ length: 6 }, (_, i) => `
+                <div class="question-dot" id="dialog-dot-${i}">${i + 1}</div>
+            `).join('');
+            
+            // Hide model
+            document.getElementById('dialog-model-answer').classList.add('hidden');
+            document.getElementById('dialog-show-model-btn').innerHTML = '💡 Показать эталонные вопросы';
+        }
+        
+        function changeDialogVariant(idx) {
+            if (dialogRunning) {
+                showModal({ icon: 'warning', title: 'Идёт тренировка', message: 'Завершите текущую тренировку перед сменой варианта.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                return;
+            }
+            dialogVariant = idx;
+            document.querySelectorAll('#screen-task2dialog .variant-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+            loadDialog();
+            resetDialog();
+        }
+        
+        function updateDialogUI() {
+            // Update dots
+            for (let i = 0; i < 6; i++) {
+                const dot = document.getElementById(`dialog-dot-${i}`);
+                dot.classList.remove('active', 'done');
+                if (i < dialogCurrentQuestion) dot.classList.add('done');
+                else if (i === dialogCurrentQuestion && dialogRunning) dot.classList.add('active');
+            }
+            
+            // Update plan items
+            for (let i = 0; i < 6; i++) {
+                const item = document.getElementById(`dialog-plan-item-${i}`);
+                item.classList.remove('current', 'done');
+                if (i < dialogCurrentQuestion) item.classList.add('done');
+                else if (i === dialogCurrentQuestion && dialogRunning) item.classList.add('current');
+            }
+            
+            // Progress
+            const progress = (dialogCurrentQuestion / 6) * 100;
+            document.getElementById('dialog-progress').style.width = progress + '%';
+            
+            // Current question
+            const currentBox = document.getElementById('dialog-current-box');
+            if (dialogRunning && dialogCurrentQuestion < 6) {
+                const data = dialogData[dialogVariant];
+                const pointText = data.points[dialogCurrentQuestion];
+                const capitalized = pointText.charAt(0).toUpperCase() + pointText.slice(1);
+                document.getElementById('dialog-current-num').textContent = `Question ${dialogCurrentQuestion + 1} of 6`;
+                document.getElementById('dialog-current-text').textContent = `Ask about: ${capitalized}`;
+                currentBox.classList.remove('hidden');
+            } else {
+                currentBox.classList.add('hidden');
+            }
+        }
+        
+        function startDialog() {
+            if (dialogRunning) return;
+            dialogRunning = true;
+            dialogCurrentQuestion = 0;
+            dialogAnswers = [];
+            dialogStartTime = Date.now();
+            
+            document.getElementById('dialog-start-btn').classList.add('hidden');
+            document.getElementById('dialog-stop-btn').classList.remove('hidden');
+            document.getElementById('dialog-recorded-container').classList.remove('hidden');
+            document.getElementById('dialog-recorded-list').innerHTML = '';
+            
+            updateDialogUI();
+            startDialogQuestion();
+        }
+        
+        function startDialogQuestion() {
+            if (dialogCurrentQuestion >= 6) {
+                stopDialog(true);
+                return;
+            }
+            
+            dialogTimeLeft = 40;
+            transcriptDialog = '';
+            
+            document.getElementById('dialog-timer-label').textContent = 'Ask your question';
+            document.getElementById('dialog-record-btn').classList.remove('hidden');
+            document.getElementById('dialog-next-btn').classList.add('hidden');
+            
+            updateDialogTimer();
+            
+            dialogTimerInterval = setInterval(() => {
+                dialogTimeLeft--;
+                updateDialogTimer();
+                if (dialogTimeLeft <= 0) {
+                    saveDialogAnswer();
+                }
+            }, 1000);
+            
+            if (!isRecordingDialog) {
+                startDialogRecording();
+            }
+        }
+        
+        function updateDialogTimer() {
+            const min = Math.floor(dialogTimeLeft / 60);
+            const sec = dialogTimeLeft % 60;
+            const el = document.getElementById('dialog-timer');
+            el.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+            el.classList.remove('warning', 'danger');
+            if (dialogTimeLeft <= 5) el.classList.add('danger');
+            else if (dialogTimeLeft <= 10) el.classList.add('warning');
+        }
+        
+        function saveDialogAnswer() {
+            clearInterval(dialogTimerInterval);
+            dialogTimerInterval = null;
+            
+            if (isRecordingDialog && recognitionDialog) {
+                try { recognitionDialog.stop(); } catch(e) {}
+                isRecordingDialog = false;
+            }
+            
+            const data = dialogData[dialogVariant];
+            const pointText = data.points[dialogCurrentQuestion];
+            const capitalized = pointText.charAt(0).toUpperCase() + pointText.slice(1);
+            const answer = transcriptDialog.trim();
+            dialogAnswers.push({
+                question: capitalized,
+                answer: answer || '(not recognised)'
+            });
+            
+            // Update recorded list
+            const listEl = document.getElementById('dialog-recorded-list');
+            const item = document.createElement('div');
+            item.className = 'recorded-question';
+            item.innerHTML = `
+                <div class="q-num-small">${dialogCurrentQuestion + 1}</div>
+                <div class="q-content">
+                    <div class="q-prompt">Ask about: ${capitalized}</div>
+                    <div class="q-answer">${answer || '(not recognised)'}</div>
+                </div>
+            `;
+            listEl.appendChild(item);
+            
+            document.getElementById('dialog-record-btn').classList.add('hidden');
+            
+            dialogCurrentQuestion++;
+            updateDialogUI();
+            
+            if (dialogCurrentQuestion >= 6) {
+                document.getElementById('dialog-timer-label').textContent = 'All questions asked';
+                document.getElementById('dialog-timer').textContent = '0:00';
+                document.getElementById('dialog-timer').classList.remove('warning', 'danger');
+                stopDialog(true);
+            } else {
+                document.getElementById('dialog-next-btn').classList.remove('hidden');
+                document.getElementById('dialog-timer-label').textContent = 'Ready for next question';
+                document.getElementById('dialog-timer').textContent = '0:40';
+                document.getElementById('dialog-timer').classList.remove('warning', 'danger');
+            }
+        }
+        
+        function nextDialogQuestion() {
+            document.getElementById('dialog-next-btn').classList.add('hidden');
+            startDialogQuestion();
+        }
+        
+        function cleanupDialog() {
+            dialogRunning = false;
+            clearInterval(dialogTimerInterval);
+            dialogTimerInterval = null;
+            if (isRecordingDialog && recognitionDialog) {
+                try { recognitionDialog.abort(); } catch(e) {}
+                isRecordingDialog = false;
+                recognitionDialog = null;
+            }
+            document.getElementById('dialog-start-btn').classList.remove('hidden');
+            document.getElementById('dialog-record-btn').classList.add('hidden');
+            document.getElementById('dialog-next-btn').classList.add('hidden');
+            document.getElementById('dialog-stop-btn').classList.add('hidden');
+            document.getElementById('dialog-record-btn').classList.remove('recording');
+        }
+        
+        function stopDialog(recordStats) {
+            if (!dialogRunning && !recordStats) return;
+            const elapsed = dialogStartTime ? Math.round((Date.now() - dialogStartTime) / 1000) : 0;
+            cleanupDialog();
+            
+            if (recordStats && elapsed > 3 && dialogAnswers.length > 0) {
+                stats.sessions++;
+                stats.task2dialog++;
+                stats.minutes += Math.max(1, Math.round(elapsed / 60));
+                localStorage.setItem('oge_stats', JSON.stringify(stats));
+                updateStats();
+                
+                let icon = 'success';
+                let title = 'Опрос завершён!';
+                let message = '';
+                
+                if (dialogAnswers.length < 6) {
+                    icon = 'warning';
+                    title = 'Опрос не завершён';
+                    message = `Задано только <strong>${dialogAnswers.length}</strong> из 6 вопросов. Необходимо задать все 6.`;
+                } else {
+                    const empty = dialogAnswers.filter(a => a.answer === '(not recognised)').length;
+                    if (empty > 0) {
+                        icon = 'warning';
+                        message = `Все 6 вопросов заданы, но <strong>${empty}</strong> не были распознаны. Проверьте микрофон и попробуйте снова.`;
+                    } else {
+                        message = `Отлично! Все <strong>6 вопросов</strong> заданы. Сравните свои вопросы с эталонными.`;
+                    }
+                }
+                
+                showModal({
+                    icon,
+                    title,
+                    message,
+                    stats: [
+                        { value: dialogAnswers.length + '/6', label: 'Вопросов задано' },
+                        { value: Math.round(elapsed / 60) + ' мин', label: 'Время' },
+                        { value: dialogVariant + 1, label: 'Вариант' }
+                    ]
+                });
+            }
+        }
+        
+        function resetDialog() {
+            if (dialogRunning) {
+                showModal({
+                    icon: 'warning',
+                    title: 'Сбросить тренировку?',
+                    message: 'Прогресс будет потерян. Статистика не сохранится.',
+                    actions: [
+                        { label: 'Отмена', class: 'btn-outline', onclick: 'closeModal()' },
+                        { label: 'Сбросить', class: 'btn-danger', onclick: 'doResetDialog()' }
+                    ]
+                });
+                return;
+            }
+            doResetDialog();
+        }
+        
+        function doResetDialog() {
+            closeModal();
+            cleanupDialog();
+            dialogCurrentQuestion = 0;
+            dialogAnswers = [];
+            dialogStartTime = null;
+            dialogTimeLeft = 40;
+            
+            document.getElementById('dialog-timer').textContent = '0:40';
+            document.getElementById('dialog-timer').classList.remove('warning', 'danger');
+            document.getElementById('dialog-timer-label').textContent = 'Готов к началу';
+            document.getElementById('dialog-progress').style.width = '0%';
+            document.getElementById('dialog-recorded-list').innerHTML = '';
+            document.getElementById('dialog-recorded-container').classList.add('hidden');
+            document.getElementById('dialog-current-box').classList.add('hidden');
+            
+            for (let i = 0; i < 6; i++) {
+                const dot = document.getElementById(`dialog-dot-${i}`);
+                if (dot) dot.classList.remove('active', 'done');
+                const item = document.getElementById(`dialog-plan-item-${i}`);
+                if (item) item.classList.remove('current', 'done');
+            }
+        }
+        
+        function toggleDialogRecord() {
+            if (!dialogRunning) return;
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showModal({ icon: 'danger', title: 'Распознавание речи недоступно', message: 'Ваш браузер не поддерживает распознавание речи. Пожалуйста, используйте Google Chrome.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                return;
+            }
+            if (isRecordingDialog) {
+                try { recognitionDialog.stop(); } catch(e) {}
+                isRecordingDialog = false;
+                document.getElementById('dialog-record-btn').classList.remove('recording');
+            } else {
+                startDialogRecording();
+            }
+        }
+        
+        function startDialogRecording() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognitionDialog = new SpeechRecognition();
+            recognitionDialog.lang = 'en-US';
+            recognitionDialog.continuous = true;
+            recognitionDialog.interimResults = true;
+            let shouldRestart = true;
+            
+            recognitionDialog.onresult = (event) => {
+                let interim = '', final = '';
+                for (let i = 0; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) final += event.results[i][0].transcript + ' ';
+                    else interim += event.results[i][0].transcript;
+                }
+                transcriptDialog = final;
+            };
+            recognitionDialog.onerror = (e) => {
+                if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                    shouldRestart = false;
+                    showModal({ icon: 'danger', title: 'Нет доступа к микрофону', message: 'Разрешите доступ к микрофону в настройках браузера.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                }
+            };
+            recognitionDialog.onend = () => {
+                if (shouldRestart && isRecordingDialog) {
+                    try { recognitionDialog.start(); } catch(e) { isRecordingDialog = false; }
+                }
+            };
+            try {
+                recognitionDialog.start();
+                isRecordingDialog = true;
+                document.getElementById('dialog-record-btn').classList.add('recording');
+            } catch(e) {}
+        }
+        
+        function toggleDialogModel() {
+            const modelEl = document.getElementById('dialog-model-answer');
+            const btn = document.getElementById('dialog-show-model-btn');
+            
+            if (modelEl.classList.contains('hidden')) {
+                const data = dialogData[dialogVariant];
+                const modelText = data.modelQuestions.map((q, i) => `${i + 1}. ${q}`).join('\n');
+                document.getElementById('dialog-model-text').textContent = modelText;
+                
+                const phrasesEl = document.querySelector('#dialog-model-answer .useful-phrases');
+                phrasesEl.innerHTML = `
+                    <h5>📌 Правила задания 2 (по ФИПИ):</h5>
+                    <ul>
+                        <li>Задавайте только прямые вопросы</li>
+                        <li>Не используйте "Can you tell me..."</li>
+                        <li>Вопрос должен точно соответствовать пункту плана</li>
+                        <li>Используйте правильную вопросительную структуру</li>
+                        <li>Соблюдайте интонацию вопроса ↗</li>
+                        <li>Избегайте односложных вопросов</li>
+                    </ul>
+                    <h5 style="margin-top: 12px;">🔑 Ключевые конструкции:</h5>
+                    <ul>${data.phrases.map(p => `<li>${p}</li>`).join('')}</ul>
+                `;
+                
+                modelEl.classList.remove('hidden');
+                btn.innerHTML = '🙈 Скрыть эталонные вопросы';
+            } else {
+                modelEl.classList.add('hidden');
+                btn.innerHTML = '💡 Показать эталонные вопросы';
+            }
+        }
+        
+        // ==================== TASK 3: EMAIL ====================
+        
+        function loadTask2() {
+            const email = task2Emails[task2Variant];
+            document.getElementById('task2-incoming').textContent = email.text;
+            document.getElementById('task2-model-answer').classList.add('hidden');
+            document.getElementById('task2-show-model-btn').innerHTML = '💡 Показать пример ответа';
+        }
+        
+        function changeTask2Variant(idx) {
+            if (task2Running) {
+                showModal({ icon: 'warning', title: 'Идёт тренировка', message: 'Завершите текущую тренировку перед сменой варианта.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                return;
+            }
+            task2Variant = idx;
+            document.querySelectorAll('#screen-task2 .variant-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+            loadTask2();
+            resetTask2();
+        }
+        
+        function startTask2() {
+            if (task2Running) return;
+            task2Running = true;
+            task2TimeLeft = 600;
+            task2StartTime = Date.now();
+            document.getElementById('task2-start-btn').classList.add('hidden');
+            document.getElementById('task2-finish-btn').classList.remove('hidden');
+            document.getElementById('task2-form').classList.remove('hidden');
+            task2TimerInterval = setInterval(() => {
+                task2TimeLeft--;
+                updateTask2Timer();
+                if (task2TimeLeft <= 0) finishTask2(true);
+            }, 1000);
+            updateTask2Timer();
+        }
+        
+        function updateTask2Timer() {
+            const min = Math.floor(task2TimeLeft / 60);
+            const sec = task2TimeLeft % 60;
+            const el = document.getElementById('task2-timer');
+            el.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+            el.classList.remove('warning', 'danger');
+            if (task2TimeLeft <= 60) el.classList.add('danger');
+            else if (task2TimeLeft <= 120) el.classList.add('warning');
+        }
+        
+        function cleanupTask2() {
+            task2Running = false;
+            clearInterval(task2TimerInterval);
+            task2TimerInterval = null;
+            document.getElementById('task2-finish-btn').classList.add('hidden');
+            document.getElementById('task2-start-btn').classList.remove('hidden');
+        }
+        
+        function finishTask2(recordStats) {
+            if (!task2Running && !recordStats) return;
+            const elapsed = task2StartTime ? Math.round((Date.now() - task2StartTime) / 1000) : 0;
+            const text = document.getElementById('task2-answer').value.trim();
+            const words = text.split(/\s+/).filter(w => w.length > 0).length;
+            cleanupTask2();
+            let icon = 'success', title = 'Письмо завершено!', message = '';
+            if (words === 0) { icon = 'warning'; title = 'Письмо не написано'; message = 'Вы не написали текст письма. Попробуйте ещё раз.'; }
+            else if (words < 90) { icon = 'warning'; title = 'Письмо слишком короткое'; message = `Написано <strong>${words}</strong> слов. Необходимо 100–120 слов.`; }
+            else if (words <= 120) { icon = 'success'; title = 'Отлично!'; message = `Написано <strong>${words}</strong> слов — объём соответствует требованиям (100–120).`; }
+            else if (words <= 132) { icon = 'warning'; title = 'Объём на грани'; message = `Написано <strong>${words}</strong> слов. Допустимый коридор — 90–132.`; }
+            else { icon = 'warning'; title = 'Письмо слишком длинное'; message = `Написано <strong>${words}</strong> слов. Рекомендуется 100–120.`; }
+            if (recordStats && words > 0) {
+                stats.sessions++;
+                stats.task2++;
+                stats.minutes += Math.max(1, Math.round(elapsed / 60));
+                localStorage.setItem('oge_stats', JSON.stringify(stats));
+                updateStats();
+            }
+            showModal({ icon, title, message, stats: [{ value: words, label: 'Слов написано' }, { value: '100–120', label: 'Норма' }, { value: Math.round(elapsed / 60) + ' мин', label: 'Время' }, { value: task2Variant + 1, label: 'Вариант' }] });
+        }
+        
+        function resetTask2() {
+            if (task2Running) {
+                showModal({
+                    icon: 'warning', title: 'Сбросить тренировку?', message: 'Ваш текущий текст будет потерян.',
+                    actions: [
+                        { label: 'Отмена', class: 'btn-outline', onclick: 'closeModal()' },
+                        { label: 'Сбросить', class: 'btn-danger', onclick: 'doResetTask2()' }
+                    ]
+                });
+                return;
+            }
+            doResetTask2();
+        }
+        
+        function doResetTask2() {
+            closeModal();
+            cleanupTask2();
+            task2TimeLeft = 600;
+            task2StartTime = null;
+            document.getElementById('task2-timer').textContent = '10:00';
+            document.getElementById('task2-timer').classList.remove('warning', 'danger');
+            document.getElementById('task2-form').classList.add('hidden');
+            document.getElementById('task2-answer').value = '';
+            document.getElementById('task2-wordcount').textContent = 'Слов: 0 / 100–120';
+            document.getElementById('task2-wordcount').className = 'word-counter';
+        }
+        
+        function updateWordCount() {
+            const text = document.getElementById('task2-answer').value.trim();
+            const words = text.split(/\s+/).filter(w => w.length > 0).length;
+            const el = document.getElementById('task2-wordcount');
+            el.textContent = `Слов: ${words} / 100–120`;
+            el.className = 'word-counter';
+            if (words >= 100 && words <= 120) el.classList.add('good');
+            else if (words >= 90 && words <= 132) el.classList.add('warning');
+        }
+        
+        function toggleTask2Model() {
+            const modelEl = document.getElementById('task2-model-answer');
+            const btn = document.getElementById('task2-show-model-btn');
+            if (modelEl.classList.contains('hidden')) {
+                const model = task2ModelAnswers[task2Variant];
+                document.getElementById('task2-model-text').textContent = model.text;
+                const words = model.text.split(/\s+/).filter(w => w.length > 0).length;
+                document.getElementById('task2-model-words').textContent = `Слов: ${words}`;
+                document.getElementById('task2-useful-phrases').innerHTML = `
+                    <h5>📌 Полезные клише для письма:</h5>
+                    <ul>${model.phrases.map(p => `<li>${p}</li>`).join('')}</ul>
+                `;
+                modelEl.classList.remove('hidden');
+                btn.innerHTML = '🙈 Скрыть пример ответа';
+            } else {
+                modelEl.classList.add('hidden');
+                btn.innerHTML = '💡 Показать пример ответа';
+            }
+        }
+        
+        // ==================== TASK 4: MONOLOGUE ====================
+        
+        function loadTask3() {
+            const topic = task3Topics[task3Variant];
+            document.getElementById('task3-topic').innerHTML = `<div class="reading-text"><strong>📌 Тема:</strong> ${topic.topic}</div>`;
+            const planList = document.getElementById('task3-plan');
+            planList.innerHTML = topic.plan.map((item, i) => `<li id="plan-item-${i}"><span class="num">${i + 1}</span><span>${item}</span></li>`).join('');
+            document.getElementById('task3-model-answer').classList.add('hidden');
+            document.getElementById('task3-show-model-btn').innerHTML = '💡 Показать пример ответа';
+        }
+        
+        function changeTask3Variant(idx) {
+            if (task3Running) {
+                showModal({ icon: 'warning', title: 'Идёт тренировка', message: 'Завершите текущую тренировку перед сменой варианта.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                return;
+            }
+            task3Variant = idx;
+            document.querySelectorAll('#screen-task3 .variant-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+            loadTask3();
+            resetTask3();
+        }
+        
+        function startTask3Prepare() {
+            if (task3Running) return;
+            task3Running = true;
+            task3Phase = 'prepare';
+            task3TimeLeft = 90;
+            task3StartTime = Date.now();
+            document.getElementById('task3-prepare-btn').classList.add('hidden');
+            document.getElementById('task3-record-btn').classList.remove('hidden');
+            document.getElementById('task3-stop-btn').classList.remove('hidden');
+            document.getElementById('task3-timer-label').textContent = 'Подготовка';
+            task3TimerInterval = setInterval(() => {
+                task3TimeLeft--;
+                updateTask3Timer();
+                if (task3Phase === 'prepare' && task3TimeLeft <= 0) {
+                    task3Phase = 'speak';
+                    task3TimeLeft = 120;
+                    document.getElementById('task3-timer-label').textContent = 'Выступление';
+                    document.getElementById('task3-record-btn').classList.add('recording');
+                    document.getElementById('task3-transcript-container').classList.remove('hidden');
+                    startRecognition3();
+                }
+                if (task3Phase === 'speak' && task3TimeLeft <= 0) stopTask3(true);
+            }, 1000);
+            updateTask3Timer();
+        }
+        
+        function updateTask3Timer() {
+            const min = Math.floor(task3TimeLeft / 60);
+            const sec = task3TimeLeft % 60;
+            const el = document.getElementById('task3-timer');
+            el.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+            el.classList.remove('warning', 'danger');
+            if (task3TimeLeft <= 10) el.classList.add('danger');
+            else if (task3TimeLeft <= 20) el.classList.add('warning');
+            const totalTime = task3Phase === 'prepare' ? 90 : 120;
+            const elapsed = totalTime - task3TimeLeft;
+            const progress = (elapsed / totalTime) * 100;
+            document.getElementById('task3-progress').style.width = progress + '%';
+        }
+        
+        function cleanupTask3() {
+            task3Running = false;
+            task3Phase = 'idle';
+            clearInterval(task3TimerInterval);
+            task3TimerInterval = null;
+            if (isRecording3 && recognition3) {
+                try { recognition3.abort(); } catch(e) {}
+                isRecording3 = false;
+                recognition3 = null;
+            }
+            document.getElementById('task3-record-btn').classList.add('hidden');
+            document.getElementById('task3-stop-btn').classList.add('hidden');
+            document.getElementById('task3-prepare-btn').classList.remove('hidden');
+            document.getElementById('task3-record-btn').classList.remove('recording');
+        }
+        
+        function stopTask3(recordStats) {
+            if (!task3Running && !recordStats) return;
+            const elapsed = task3StartTime ? Math.round((Date.now() - task3StartTime) / 1000) : 0;
+            const sentences = transcript3.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+            cleanupTask3();
+            const sc = document.getElementById('task3-sentence-count');
+            sc.textContent = `Фраз: ${sentences} / 10–12`;
+            sc.className = 'word-counter';
+            if (sentences >= 10 && sentences <= 12) sc.classList.add('good');
+            else if (sentences >= 8) sc.classList.add('warning');
+            if (recordStats && elapsed > 5) {
+                stats.sessions++;
+                stats.task3++;
+                stats.minutes += Math.max(1, Math.round(elapsed / 60));
+                localStorage.setItem('oge_stats', JSON.stringify(stats));
+                updateStats();
+                let icon = 'success', title = 'Монолог завершён!', message = '';
+                if (sentences === 0) { icon = 'warning'; title = 'Монолог не записан'; message = 'Речь не была распознана.'; }
+                else if (sentences < 10) { icon = 'warning'; title = 'Слишком короткий монолог'; message = `Распознано <strong>${sentences}</strong> фраз. Необходимо 10–12.`; }
+                else if (sentences <= 12) { icon = 'success'; title = 'Отлично!'; message = `Распознано <strong>${sentences}</strong> фраз — объём соответствует требованиям.`; }
+                else { icon = 'warning'; title = 'Монолог длиннее нормы'; message = `Распознано <strong>${sentences}</strong> фраз. Рекомендуется 10–12.`; }
+                showModal({ icon, title, message, stats: [{ value: sentences, label: 'Фраз' }, { value: '10–12', label: 'Норма' }, { value: Math.round(elapsed / 60) + ' мин', label: 'Время' }, { value: task3Variant + 1, label: 'Вариант' }] });
+            }
+        }
+        
+        function resetTask3() {
+            if (task3Running) {
+                showModal({
+                    icon: 'warning', title: 'Сбросить тренировку?', message: 'Прогресс будет потерян.',
+                    actions: [
+                        { label: 'Отмена', class: 'btn-outline', onclick: 'closeModal()' },
+                        { label: 'Сбросить', class: 'btn-danger', onclick: 'doResetTask3()' }
+                    ]
+                });
+                return;
+            }
+            doResetTask3();
+        }
+        
+        function doResetTask3() {
+            closeModal();
+            cleanupTask3();
+            task3TimeLeft = 90;
+            task3StartTime = null;
+            transcript3 = '';
+            document.getElementById('task3-timer').textContent = '1:30';
+            document.getElementById('task3-timer').classList.remove('warning', 'danger');
+            document.getElementById('task3-timer-label').textContent = 'Подготовка';
+            document.getElementById('task3-progress').style.width = '0%';
+            document.getElementById('task3-transcript').textContent = '';
+            document.getElementById('task3-transcript-container').classList.add('hidden');
+            document.getElementById('task3-sentence-count').textContent = 'Фраз: 0 / 10–12';
+            document.getElementById('task3-sentence-count').className = 'word-counter';
+        }
+        
+        function toggleTask3Record() {
+            if (!task3Running) return;
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showModal({ icon: 'danger', title: 'Распознавание речи недоступно', message: 'Ваш браузер не поддерживает распознавание речи. Пожалуйста, используйте Google Chrome.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                return;
+            }
+            if (isRecording3) {
+                try { recognition3.stop(); } catch(e) {}
+                isRecording3 = false;
+                document.getElementById('task3-record-btn').classList.remove('recording');
+            } else {
+                document.getElementById('task3-transcript-container').classList.remove('hidden');
+                startRecognition3();
+                document.getElementById('task3-record-btn').classList.add('recording');
+            }
+        }
+        
+        function startRecognition3() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition3 = new SpeechRecognition();
+            recognition3.lang = 'en-US';
+            recognition3.continuous = true;
+            recognition3.interimResults = true;
+            let shouldRestart = true;
+            recognition3.onresult = (event) => {
+                let interim = '', final = '';
+                for (let i = 0; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) final += event.results[i][0].transcript + ' ';
+                    else interim += event.results[i][0].transcript;
+                }
+                transcript3 = final;
+                document.getElementById('task3-transcript').textContent = final + interim;
+                const sentences = final.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+                const sc = document.getElementById('task3-sentence-count');
+                sc.textContent = `Фраз: ${sentences} / 10–12`;
+                sc.className = 'word-counter';
+                if (sentences >= 10 && sentences <= 12) sc.classList.add('good');
+                else if (sentences >= 8) sc.classList.add('warning');
+            };
+            recognition3.onerror = (e) => {
+                if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+                    shouldRestart = false;
+                    showModal({ icon: 'danger', title: 'Нет доступа к микрофону', message: 'Разрешите доступ к микрофону в настройках браузера.', actions: [{ label: 'Понятно', class: 'btn-primary', onclick: 'closeModal()' }] });
+                }
+            };
+            recognition3.onend = () => {
+                if (shouldRestart && isRecording3) {
+                    try { recognition3.start(); } catch(e) { isRecording3 = false; }
+                }
+            };
+            try {
+                recognition3.start();
+                isRecording3 = true;
+                document.getElementById('task3-transcript-container').classList.remove('hidden');
+            } catch(e) {}
+        }
+        
+        function toggleTask3Model() {
+            const modelEl = document.getElementById('task3-model-answer');
+            const btn = document.getElementById('task3-show-model-btn');
+            if (modelEl.classList.contains('hidden')) {
+                const model = task3ModelAnswers[task3Variant];
+                document.getElementById('task3-model-text').textContent = model.text;
+                const sentences = model.text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+                document.getElementById('task3-model-sentences').textContent = `Фраз: ${sentences}`;
+                document.getElementById('task3-useful-phrases').innerHTML = `
+                    <h5>📌 Полезные клише для монолога:</h5>
+                    <ul>${model.phrases.map(p => `<li>${p}</li>`).join('')}</ul>
+                `;
+                modelEl.classList.remove('hidden');
+                btn.innerHTML = '🙈 Скрыть пример ответа';
+            } else {
+                modelEl.classList.add('hidden');
+                btn.innerHTML = '💡 Показать пример ответа';
+            }
+        }
+        
+        // ==================== STATS ====================
+        
+        function updateStats() {
+            document.getElementById('total-sessions').textContent = stats.sessions;
+            document.getElementById('total-time').textContent = stats.minutes;
+            document.getElementById('task1-done').textContent = stats.task1;
+            document.getElementById('task2dialog-done').textContent = stats.task2dialog;
+            document.getElementById('task2-done').textContent = stats.task2;
+            document.getElementById('task3-done').textContent = stats.task3;
+        }
+        
+        // ==================== INIT ====================
+        
+        loadTask1();
+        loadDialog();
+        loadTask2();
+        loadTask3();
+        updateStats();
+    </script>
+</body>
+</html>
